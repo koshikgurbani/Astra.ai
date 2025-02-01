@@ -6,7 +6,7 @@ import Colors from '@/data/Colors'
 function Header() {
     return (
         <div className='p-4 flex justify-between items-center'>
-            <Image src={'/astra-logo.png'} alt='Logo' width={40} height={40} />
+            <Image src={'/astra-logo.png'} alt='Logo' width={90} height={120} />
             <div className='flex gap-5'>
                 <Button variant="ghost">Sign In</Button>
                 <Button className="text-white" style={{
