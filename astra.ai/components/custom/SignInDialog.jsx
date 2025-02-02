@@ -14,10 +14,15 @@ import { Button } from '../ui/button'
 import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import { UserDetailContext } from '@/context/UserDetailContext'
+import { useMutation } from 'convex/react'
+import { api } from '@/convex/_generated/api'
+import uuid4 from 'uuid4'
 
 
 function SignInDialog({ openDialog, closeDialog }) {
     const{userDetail,setUserDetail} = useContext(UserDetailContext);
+
+    const CreateUser = useMutation(api.users.CreateUser);
 
     const googleLogin = useGoogleLogin({
         onSuccess: async(tokenResponse) => {
@@ -28,6 +33,19 @@ function SignInDialog({ openDialog, closeDialog }) {
             );
 
             console.log(userInfo);
+            //save this inside the database
+            const user=userInfo.data;
+            await CreateUser({
+                name:user?.name,
+                email:user?.email,
+                picture:user?.picture,
+                uid:uuid4()
+            })
+
+            if(typeof window !== undefined){
+                localStorage.setItem('user',JSON.stringify(user));
+            }
+
             setUserDetail(userInfo?.data);
             closeDialog(false);
         },
@@ -41,7 +59,7 @@ function SignInDialog({ openDialog, closeDialog }) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle></DialogTitle>
-                    <DialogDescription >
+                    {/* <DialogDescription > */}
                         <div className="flex flex-col items-center justify-center gap-3">
                             <h2 className='font-bold text-2xl text-center text-white'>{Lookup?.SIGNIN_HEADING}</h2>
                             <p className='mt-2 text-center'>{Lookup?.SIGNIN_SUBHEADING}</p>
@@ -49,7 +67,7 @@ function SignInDialog({ openDialog, closeDialog }) {
 
                             <p>{Lookup?.SIGNIN_AGREEMENT_TEXT}</p>
                         </div>
-                    </DialogDescription>
+                    {/* </DialogDescription> */}
                 </DialogHeader>
             </DialogContent>
         </Dialog>
