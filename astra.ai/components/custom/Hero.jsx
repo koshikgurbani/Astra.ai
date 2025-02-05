@@ -31,13 +31,15 @@ function Hero() {
             role:'user',
             content:input
         }
-        setMessages(message);
 
+        setMessages([message]);
+        
         const workspaceId = await CreateWorkspace({
             user: userDetail._id,
             messages: [message]
         })
         console.log(workspaceId);
+        console.log("messages in Hero section",messages);
         router.push('/workspace/'+workspaceId);
 
     }

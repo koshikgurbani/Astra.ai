@@ -42,7 +42,7 @@ function SignInDialog({ openDialog, closeDialog }) {
                 uid:uuid4()
             })
 
-            if(typeof window !== undefined){
+            if(typeof window !== 'undefined'){
                 localStorage.setItem('user',JSON.stringify(user));
             }
 

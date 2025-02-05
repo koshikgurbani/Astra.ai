@@ -9,8 +9,9 @@ import { useConvex } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 
 function Provider({ children }) {
-    const [messages, setMessages] = useState()
-    const [userDetail, setUserDetail] = useState();
+    console.log("inside provider");
+    const [messages, setMessages] = useState([])
+    const [userDetail, setUserDetail] = useState({});
     const convex = useConvex();
 
     useEffect(()=> {
@@ -18,7 +19,7 @@ function Provider({ children }) {
     })
 
     const  IsAuthenticated = async() => {
-        if(typeof window !== undefined){
+        if(typeof window !== 'undefined'){
             const user=JSON.parse(localStorage.getItem('user'));
     
             //Fetch from Database
@@ -27,7 +28,7 @@ function Provider({ children }) {
             })
             
             setUserDetail(result);
-            console.log(result);
+            console.log("get user result in provider",result);
         }
 
     }
