@@ -7,6 +7,8 @@ import { UserDetailContext } from '@/context/UserDetailContext'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { useConvex } from 'convex/react'
 import { api } from '@/convex/_generated/api'
+import { SidebarProvider } from '@/components/ui/sidebar'
+import AppSideBar from '@/components/custom/AppSideBar'
 
 function Provider({ children }) {
     console.log("inside provider");
@@ -14,21 +16,21 @@ function Provider({ children }) {
     const [userDetail, setUserDetail] = useState({});
     const convex = useConvex();
 
-    useEffect(()=> {
+    useEffect(() => {
         IsAuthenticated();
     })
 
-    const  IsAuthenticated = async() => {
-        if(typeof window !== 'undefined'){
-            const user=JSON.parse(localStorage.getItem('user'));
-    
+    const IsAuthenticated = async () => {
+        if (typeof window !== 'undefined') {
+            const user = JSON.parse(localStorage.getItem('user'));
+
             //Fetch from Database
-            const result=await convex.query(api.users.GetUser,{
-                email:user?.email
+            const result = await convex.query(api.users.GetUser, {
+                email: user?.email
             })
-            
+
             setUserDetail(result);
-            console.log("get user result in provider",result);
+            console.log("get user result in provider", result);
         }
 
     }
@@ -45,7 +47,10 @@ function Provider({ children }) {
                             disableTransitionOnChange
                         >
                             <Header />
-                            {children}
+                            <SidebarProvider defaultOpen={false}>
+                                <AppSideBar />
+                                {children}
+                            </SidebarProvider>
                         </NextThemesProvider>
                     </MessagesContext.Provider>
                 </UserDetailContext.Provider>

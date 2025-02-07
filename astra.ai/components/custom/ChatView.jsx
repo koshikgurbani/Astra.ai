@@ -13,6 +13,7 @@ import Lookup from '@/data/Lookup';
 import axios from 'axios';
 import Prompt from '@/data/Prompt';
 import ReactMarkdown from 'react-markdown';
+import { useSidebar } from '../ui/sidebar';
 
 function ChatView() {
     const { id } = useParams();
@@ -22,6 +23,8 @@ function ChatView() {
     const [userInput, setUserInput] = useState();
     const [loading, setLoading] = useState(false);
     const UpdateMessages = useMutation(api.workspace.UpdateMessages);
+
+    const {toggleSidebar} = useSidebar();
 
     console.log("messages in the beginning of chat view ", messages)
     useEffect(() => {
@@ -91,11 +94,11 @@ function ChatView() {
 
     return (
         <div className='relative h-[85vh] flex flex-col'>
-            <div className='flex-1 overflow-y-scroll scrollbar-hide'>
+            <div className='flex-1 overflow-y-scroll scrollbar-hide pl-5'>
                 {messages?.map((msg, index) => (
                     <div key={index}
                         className='p-3 rounded-lg mb-2 flex gap-2 items-center leading-7'
-                        style={{ backgroundColor: Colors.BACKGROUND }}
+                        style={{ backgroundColor: Colors.CHAT_BACKGROUND }}
                     >
                         {msg?.role == 'user' &&
                             <Image src={userDetail?.picture} alt='userImage'
@@ -105,7 +108,7 @@ function ChatView() {
                     </div>
                 ))}
                 {loading && <div className='p-3 rounded-lg mb-2 flex gap-2 items-center'
-                    style={{ backgroundColor: Colors.BACKGROUND }}
+                    style={{ backgroundColor: Colors.CHAT_BACKGROUND }}
                 >
                     <Loader2Icon className='animate-spin' />
                     <h2>Generating response...</h2>
@@ -114,6 +117,11 @@ function ChatView() {
 
 
             {/* INPUT SECTION */}
+            <div className='flex gap-2 items-end'>
+            {Object.entries(userDetail).length > 0 && <Image src={userDetail?.picture} 
+            className='rounded-full cursor-pointer'
+            onClick={toggleSidebar}
+            alt='user' width={30} height={30}/>}
             <div className='p-5 border rounded-xl max-w-xl w-full mt-3'
                 style={{
                     backgroundColor: Colors.BACKGROUND
@@ -130,6 +138,7 @@ function ChatView() {
                 <div>
                     <Link className='h-5 w-5' />
                 </div>
+            </div>
             </div>
         </div>
     );

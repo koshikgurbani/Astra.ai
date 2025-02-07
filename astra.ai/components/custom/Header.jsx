@@ -7,8 +7,8 @@ import { UserDetailContext } from '@/context/UserDetailContext';
 function Header() {
     const {userDetail,setUserDetail} = useContext(UserDetailContext);
     return (
-        <div className='p-4 flex justify-between items-center'>
-            <Image src={'/astra-logo.png'} alt='Logo' width={90} height={120} />
+        <div className='p-4 flex justify-between items-center border-b'>
+            <Image src={'/astra-logo.png'} alt='Logo' width={80} height={40} />
             {!userDetail?.name && <div className='flex gap-5'>
                 <Button variant="ghost">Sign In</Button>
                 <Button className="text-white" style={{
