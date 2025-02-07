@@ -16,16 +16,21 @@ import { api } from '@/convex/_generated/api';
 import { useConvex, useMutation } from 'convex/react';
 import { useParams } from 'next/navigation';
 import { Loader2Icon } from 'lucide-react';
+import { countToken } from './ChatView';
+import { UserDetailContext } from '@/context/UserDetailContext';
 
 function CodeView() {
   const [activeTab, setActiveTab] = React.useState('code');
   const [files,setFiles] =useState(Lookup?.DEFAULT_FILE)
   const {messages, setMessages} = useContext(MessagesContext);
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
 
   const [loading,setLoading] = useState(false);
 
   const UpdateFiles = useMutation(api.workspace.UpdateFiles);
   const {id} = useParams();
+
+  const UpdateTokens = useMutation(api.users.UpdateToken);
 
   const convex = useConvex();
 
@@ -68,6 +73,16 @@ function CodeView() {
       workspaceId:id,
       files:aiResp?.files
     });
+    //Update Tokens in Database
+    const tokensUsed = Number(countToken(JSON.stringify(aiResp)));
+    const tokensRemaining = Number(userDetail?.token) - tokensUsed;
+    await UpdateTokens({
+        userId:userDetail?._id,
+        token:tokensRemaining
+    })
+    console.log("tokens consumed in GenerateAiCode", tokensUsed);
+
+    setActiveTab('code');
     setLoading(false);
 
   }

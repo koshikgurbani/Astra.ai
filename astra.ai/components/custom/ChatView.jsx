@@ -15,6 +15,10 @@ import Prompt from '@/data/Prompt';
 import ReactMarkdown from 'react-markdown';
 import { useSidebar } from '../ui/sidebar';
 
+export const countToken = (inputText) => {
+    return inputText.trim().split(/\s+/).filter(word => word).length;
+}
+
 function ChatView() {
     const { id } = useParams();
     const convex = useConvex();
@@ -25,6 +29,8 @@ function ChatView() {
     const UpdateMessages = useMutation(api.workspace.UpdateMessages);
 
     const {toggleSidebar} = useSidebar();
+
+    const UpdateTokens = useMutation(api.users.UpdateToken);
 
     console.log("messages in the beginning of chat view ", messages)
     useEffect(() => {
@@ -78,6 +84,15 @@ function ChatView() {
             workspaceId: id,
             messages: [...messages, aiResp]
         })
+
+        //Update Tokens in Database
+        const tokensUsed = Number(countToken(JSON.stringify(aiResp)));
+        const tokensRemaining = Number(userDetail?.token) - tokensUsed;
+        await UpdateTokens({
+            userId:userDetail?._id,
+            token:tokensRemaining
+        })
+        console.log("tokens consumed in getAiResponse", tokensUsed);
 
         setLoading(false);
     }
