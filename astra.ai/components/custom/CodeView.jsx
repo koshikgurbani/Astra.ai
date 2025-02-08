@@ -76,6 +76,12 @@ function CodeView() {
     //Update Tokens in Database
     const tokensUsed = Number(countToken(JSON.stringify(aiResp)));
     const tokensRemaining = Number(userDetail?.token) - tokensUsed;
+
+    setUserDetail(prev => ({
+      ...prev,
+      token: tokensRemaining
+  }))
+
     await UpdateTokens({
         userId:userDetail?._id,
         token:tokensRemaining

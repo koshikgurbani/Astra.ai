@@ -27,6 +27,11 @@ function Hero() {
             return;
         }
 
+        if(userDetail?.token<10){
+            toast("You don't have enough tokens left.")
+            return;
+        }
+        
         const message = {
             role:'user',
             content:input

@@ -88,6 +88,12 @@ function ChatView() {
         //Update Tokens in Database
         const tokensUsed = Number(countToken(JSON.stringify(aiResp)));
         const tokensRemaining = Number(userDetail?.token) - tokensUsed;
+
+        setUserDetail(prev => ({
+            ...prev,
+            token: tokensRemaining
+        }))
+
         await UpdateTokens({
             userId:userDetail?._id,
             token:tokensRemaining
@@ -99,6 +105,10 @@ function ChatView() {
 
 
     const onGenerate = async (input) => {
+        if(userDetail?.token<10){
+            toast("You don't have enough tokens left.")
+            return;
+        }
         const message = {
             role: 'user',
             content: input
