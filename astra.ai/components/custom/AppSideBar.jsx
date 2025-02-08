@@ -18,7 +18,7 @@ function AppSideBar() {
     return (
         <Sidebar>
             <SidebarHeader className="p-5">
-                <Image src={'/astra-logo.png'} alt='Logo' width={80} height={40} />
+                <Image src={'/astra-logo.png'} alt='Logo' width={100} height={40} />
             </SidebarHeader>
             <SidebarContent className="p-5 scrollbar-hide">
                 <Button> <MessageCircleCode />Start New chat</Button>

@@ -10,12 +10,16 @@ import { api } from '@/convex/_generated/api'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import AppSideBar from '@/components/custom/AppSideBar'
 import { PayPalScriptProvider } from '@paypal/react-paypal-js'
+import { ActionContext } from '@/context/ActionContext'
+import { useRouter } from 'next/navigation'
 
 function Provider({ children }) {
     console.log("inside provider");
     const [messages, setMessages] = useState([])
     const [userDetail, setUserDetail] = useState({});
+    const [action, setAction] = useState();
     const convex = useConvex();
+    const router = useRouter();
 
     useEffect(() => {
         IsAuthenticated();
@@ -24,6 +28,11 @@ function Provider({ children }) {
     const IsAuthenticated = async () => {
         if (typeof window !== 'undefined') {
             const user = JSON.parse(localStorage.getItem('user'));
+
+            if(!user){
+                router.push('/')
+                return;
+            }
 
             //Fetch from Database
             const result = await convex.query(api.users.GetUser, {
@@ -39,23 +48,27 @@ function Provider({ children }) {
     return (
         <div>
             <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID_KEY}>
-            <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}}>
-                <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
-                    <MessagesContext.Provider value={{ messages, setMessages }}>
-                        <NextThemesProvider
-                            attribute="class"
-                            defaultTheme="dark"
-                            enableSystem
-                            disableTransitionOnChange
-                        >
-                            <Header />
-                            <SidebarProvider defaultOpen={false}>
-                                <AppSideBar />
-                                {children}
-                            </SidebarProvider>
-                        </NextThemesProvider>
-                    </MessagesContext.Provider>
-                </UserDetailContext.Provider>
+                <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID }}>
+                    <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
+                        <MessagesContext.Provider value={{ messages, setMessages }}>
+                            <ActionContext.Provider value={{action, setAction}}>
+                            <NextThemesProvider
+                                attribute="class"
+                                defaultTheme="dark"
+                                enableSystem
+                                disableTransitionOnChange
+                            >
+                                <SidebarProvider defaultOpen={false} className="flex flex-col">
+                                    <Header />
+                                    {children}
+                                    <div className='absolute'>
+                                        <AppSideBar />
+                                    </div>
+                                </SidebarProvider>
+                            </NextThemesProvider>
+                            </ActionContext.Provider>
+                        </MessagesContext.Provider>
+                    </UserDetailContext.Provider>
                 </PayPalScriptProvider>
             </GoogleOAuthProvider>
         </div>

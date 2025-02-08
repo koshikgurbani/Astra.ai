@@ -18,9 +18,11 @@ import { useParams } from 'next/navigation';
 import { Loader2Icon } from 'lucide-react';
 import { countToken } from './ChatView';
 import { UserDetailContext } from '@/context/UserDetailContext';
+import SandpackPreviewClient from './SandpackPreviewClient';
+import { ActionContext } from '@/context/ActionContext';
 
 function CodeView() {
-  const [activeTab, setActiveTab] = React.useState('code');
+  const [activeTab, setActiveTab] = useState('code');
   const [files,setFiles] =useState(Lookup?.DEFAULT_FILE)
   const {messages, setMessages} = useContext(MessagesContext);
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
@@ -129,7 +131,7 @@ function CodeView() {
           <SandpackCodeEditor style={{ height: "80vh" }} />
           </>}
           {activeTab === 'preview' && <>
-          <SandpackPreview style={{ height: "80vh" }} showNavigator={true} />
+          <SandpackPreviewClient />
           </>}
         </SandpackLayout>
       </SandpackProvider>
