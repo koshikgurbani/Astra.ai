@@ -22,9 +22,9 @@ function AppSideBar() {
             </SidebarHeader>
             <SidebarContent className="p-5 scrollbar-hide">
                 <Button> <MessageCircleCode />Start New chat</Button>
-                <SidebarGroup />
+                <SidebarGroup>
                 <WorkspaceHistory />
-                <SidebarGroup />
+                </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
                 <SideBarFooter />
