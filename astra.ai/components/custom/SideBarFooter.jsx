@@ -28,6 +28,11 @@ function SideBarFooter() {
     ]
 
     const onOptionClick=(option) =>{
+        if(option.name==='Sign Out'){
+            googleLogout();
+            localStorage.clear();
+            window.location.reload();
+        }
         router.push(option.path);
     }
 
