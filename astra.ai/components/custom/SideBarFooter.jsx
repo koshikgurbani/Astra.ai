@@ -3,6 +3,7 @@ import React from 'react'
 import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation';
 import { useSidebar } from '../ui/sidebar';
+import { googleLogout } from '@react-oauth/google';
 
 function SideBarFooter() {
     const router=useRouter();
